@@ -1,34 +1,51 @@
 package model
 
 import (
-	"time"
+	"gorm.io/gorm"
 )
 
 // Interview 面试记录
 type Interview struct {
-	ID         uint       `gorm:"primarykey" json:"id"`
-	UserID     uint       `gorm:"not null" json:"user_id"`
-	Title      string     `gorm:"size:100;not null" json:"title"` // 面试标题
-	Status     string     `gorm:"type:enum('pending','in_progress','completed');default:'pending'" json:"status"`
-	TotalScore float64    `gorm:"type:decimal(5,2)" json:"total_score"` // 总分
-	StartTime  time.Time  `json:"start_time"`
-	EndTime    time.Time  `json:"end_time"`
-	ResumeID   uint       `gorm:"not null" json:"resume_id"` // 关联的简历ID
-	JobTitle   string     `gorm:"size:100" json:"job_title"` // 应聘职位
-	Company    string     `gorm:"size:100" json:"company"`   // 公司名称
-	CreatedAt  time.Time  `json:"created_at"`
-	User       User       `gorm:"foreignKey:UserID" json:"user,omitempty"`
-	Resume     Resume     `gorm:"foreignKey:ResumeID" json:"resume,omitempty"`
-	Questions  []Question `gorm:"foreignKey:InterviewID" json:"questions,omitempty"`
+	gorm.Model
+	ResumeID  uint       `json:"resume_id" gorm:"index"`
+	Type      string     `json:"type"`   // 面试类型：technical, behavioral, etc.
+	Status    string     `json:"status"` // 面试状态：pending, completed, etc.
+	Questions []Question `json:"questions" gorm:"foreignKey:InterviewID"`
 }
 
-type InterviewQuestion struct {
-	ID          uint      `gorm:"primarykey" json:"id"`
-	InterviewID uint      `gorm:"not null" json:"interview_id"`
-	QuestionID  uint      `gorm:"not null" json:"question_id"`
-	UserAnswer  string    `gorm:"type:text" json:"user_answer"`
-	AIFeedback  string    `gorm:"type:text" json:"ai_feedback"`
-	Score       float64   `gorm:"type:decimal(5,2)" json:"score"`
-	CreatedAt   time.Time `json:"created_at"`
-	Question    Question  `gorm:"foreignKey:QuestionID" json:"question,omitempty"`
+// Question 面试问题
+type Question struct {
+	gorm.Model
+	InterviewID        uint    `json:"interview_id" gorm:"index"`
+	Question           string  `json:"question"`
+	EvaluationCriteria string  `json:"evaluation_criteria"`
+	Difficulty         string  `json:"difficulty"`
+	Answer             *Answer `json:"answer" gorm:"foreignKey:QuestionID"`
+}
+
+// Answer 面试答案
+type Answer struct {
+	gorm.Model
+	QuestionID uint   `json:"question_id" gorm:"index"`
+	Content    string `json:"content"`
+	Score      int    `json:"score"`
+	Feedback   string `json:"feedback"`
+}
+
+// Evaluation 评估结果
+type Evaluation struct {
+	Score       int      `json:"score"`
+	Evaluation  string   `json:"evaluation"`
+	Suggestions []string `json:"suggestions"`
+}
+
+// Feedback 面试反馈
+type Feedback struct {
+	gorm.Model
+	ResumeID               uint     `json:"resume_id" gorm:"index"`
+	OverallEvaluation      string   `json:"overall_evaluation"`
+	Strengths              []string `json:"strengths" gorm:"type:json"`
+	Weaknesses             []string `json:"weaknesses" gorm:"type:json"`
+	ImprovementSuggestions []string `json:"improvement_suggestions" gorm:"type:json"`
+	DevelopmentSuggestions []string `json:"development_suggestions" gorm:"type:json"`
 }

@@ -1,0 +1,41 @@
+server:
+  port: 8080
+  mode: debug
+
+database:
+  host: localhost
+  port: 3306
+  username: root
+  password: 123456
+  name: ai_interview
+  max_idle_conns: 10
+  max_open_conns: 100
+  conn_max_idle_time: 3600s
+  conn_max_lifetime: 7200s
+  log_mode: true
+
+jwt:
+  secret: your-secret-key
+  expire: 24h
+
+upload:
+  max_size: 10485760 # 10MB
+  allowed_types:
+    - .doc
+    - .docx
+  save_path: ./uploads
+
+# 单用户系统配置
+system:
+  default_username: admin
+  default_password: admin123
+  default_email: admin@localhost
+
+# DeepSeek配置
+deepseek:
+  api_key: your-api-key
+  api_url: https://api.deepseek.com/v1
+  model: deepseek-chat
+  max_tokens: 2000
+  temperature: 0.7
+  timeout: 30s 

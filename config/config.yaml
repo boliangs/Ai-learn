@@ -1,6 +1,7 @@
 server:
   port: 8080
   mode: debug  # debug or release
+  host: localhost
 
 database:
   driver: mysql
@@ -27,4 +28,4 @@ upload:
   allowed_types:
     - .docx
     - .doc
-  save_path: ./uploads 
+  save_path: ./uploads  # 本地存储路径 
