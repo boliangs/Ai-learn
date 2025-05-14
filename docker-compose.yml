@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=ai_interview
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - ai-interview-network
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=ai_interview
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - ai-interview-network
+
+volumes:
+  mysql-data:
+
+networks:
+  ai-interview-network:
+    driver: bridge 

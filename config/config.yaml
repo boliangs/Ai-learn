@@ -1,0 +1,30 @@
+server:
+  port: 8080
+  mode: debug  # debug or release
+
+database:
+  driver: mysql
+  host: localhost
+  port: 3306
+  username: root
+  password: root
+  dbname: ai_interview
+  charset: utf8mb4
+  max_idle_conns: 10
+  max_open_conns: 100
+
+deepseek:
+  api_key: your_api_key_here
+  api_url: https://api.deepseek.com/v1
+  model: deepseek-chat
+
+jwt:
+  secret: your_jwt_secret_here
+  expire: 24h  # token过期时间
+
+upload:
+  max_size: 10  # 最大文件大小(MB)
+  allowed_types:
+    - .docx
+    - .doc
+  save_path: ./uploads 
